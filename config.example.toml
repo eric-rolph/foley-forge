@@ -30,7 +30,7 @@ min_gap = 0.20         # seconds: merge/deduplicate cues closer than this
 min_confidence = 0.35  # drop interactions below this confidence
 
 [match]
-use_clap = false       # semantic matching (needs the [clap] extra + precomputed embeddings)
+use_clap = false       # PLANNED (roadmap): CLAP semantic matching; currently a no-op
 min_score = 0.20       # drop SFX matches weaker than this
 gain_db = -6.0         # default gain applied to placed SFX clips
 commercial = true      # true excludes CC-BY-NC sounds and warns on attribution-required assets
@@ -43,4 +43,5 @@ audio_role = "effects"                   # FCPXML audioRole for placed SFX
 [sfx]
 # extra library folders to index alongside the bundled CC0 pack
 libraries = []
-# freesound = { api_key = "", license_filter = "cc0,cc-by" }   # bring your own key; see NOTICE.md
+# NOTE: Freesound is not yet config-driven. FreesoundClient is a library-only helper
+# (see NOTICE.md); use `foley-forge index-sfx` to add downloaded sounds for now.

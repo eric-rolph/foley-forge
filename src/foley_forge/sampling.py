@@ -75,6 +75,7 @@ def sample_frames(
     """Grab frames at a regular grid + at each cut, capped to ``max_frames``."""
     if cv2 is None:  # pragma: no cover
         raise RuntimeError("OpenCV (cv2) is required for frame sampling")
+    max_frames = max(1, max_frames)   # 0/negative would divide-by-zero / empty the grid
     duration = info.duration or 0.0
     cut_times = cut_times or []
 

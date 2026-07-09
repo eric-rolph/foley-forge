@@ -1,11 +1,10 @@
 """Match a detected event label to a sound-effect asset.
 
-Two layers:
-
-* **lexical** — overlap between the event's taxonomy tags and each asset's tags
-  (with partial-token containment), always available;
-* **semantic (CLAP)** — optional; embeds the event phrase and ranks assets by cosine
-  similarity to their precomputed audio embeddings. Requires the ``clap`` extra.
+Today this is purely **lexical**: overlap between the event's taxonomy tags and each
+asset's tags (with a conservative partial-token fallback). A **semantic (CLAP)** layer
+— embedding the event phrase and ranking assets by cosine similarity to precomputed
+audio embeddings — is on the roadmap (the ``clap`` extra + ``use_clap`` flag are
+reserved for it) but is **not implemented** yet.
 
 Commercial runs exclude non-commercial (CC-BY-NC) assets and prefer CC0.
 """
@@ -27,11 +26,14 @@ def _lexical_score(event_tags: set[str], asset: SFXAsset) -> float:
     if inter:
         score = len(inter) / len(event_tags)
     else:
+        # Partial-token fallback, but only for longer tokens (so "car" doesn't match
+        # "cardboard") and scored below the weakest exact-intersection so a partial
+        # match never outranks a real tag hit.
         score = 0.0
         for e in event_tags:
             for a in at:
-                if len(e) >= 3 and (e in a or a in e):
-                    score = max(score, 0.35)
+                if len(e) >= 5 and (e in a or a in e):
+                    score = max(score, 0.25)
     return min(1.0, score)
 
 

@@ -36,6 +36,12 @@ class FCPXMLExporter(Exporter):
             frameDuration=frame_dur, width=str(timeline.width), height=str(timeline.height),
         )
 
+        # An <asset>'s duration must cover the longest placed instance of that media,
+        # or a reused asset-clip could reference beyond the asset's available range.
+        path_dur: dict[str, float] = {}
+        for c in timeline.clips:
+            path_dur[c.media_path] = max(path_dur.get(c.media_path, 0.0), c.duration)
+
         # Register one <asset> per unique media path.
         asset_ids: dict[str, str] = {}
         next_id = [2]
@@ -46,9 +52,10 @@ class FCPXMLExporter(Exporter):
             aid = f"r{next_id[0]}"
             next_id[0] += 1
             asset_ids[path] = aid
+            asset_dur = max(duration, path_dur.get(path, 0.0), 1.0 / fps)
             attrs = {
                 "id": aid, "name": name, "start": "0s",
-                "duration": fcpxml_time(max(duration, 1.0 / fps), fps),
+                "duration": fcpxml_time(asset_dur, fps),
                 "hasAudio": "1", "audioSources": "1",
             }
             if has_video:

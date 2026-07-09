@@ -12,6 +12,7 @@ general SFX library finds sensible sounds.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 
@@ -98,7 +99,10 @@ def normalize_label(text: str) -> tuple[str | None, float]:
     best_len = 0
     for key, ev in EVENTS.items():
         for kw in (key.replace("_", " "), *ev.keywords):
-            if kw and kw in t and len(kw) > best_len:
+            # Word-boundary match so short keywords like "car" don't fire inside
+            # unrelated words ("scary", "cart"). Whole-word/phrase keywords still
+            # match ("slams shut" in "the door slams shut").
+            if kw and len(kw) > best_len and re.search(rf"\b{re.escape(kw)}\b", t):
                 best_key, best_len = key, len(kw)
     if best_key is None:
         return None, 0.0

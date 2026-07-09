@@ -71,16 +71,21 @@ def _write_otio(timeline: Timeline, path: Path) -> Path:
     tl = otio.schema.Timeline(name=timeline.name)
     track = otio.schema.Track(name="SFX", kind=otio.schema.TrackKind.Audio)
     tl.tracks.append(track)
-    cursor = 0.0
+    # Accumulate absolute integer frame positions so each clip lands at
+    # round(start*fps) — matching the xmeml/FCPXML/EDL exporters exactly — instead of
+    # summing independently-rounded gaps (which drifts a frame over many clips).
+    cursor_frames = 0
     for clip in sorted(timeline.audio_clips, key=lambda c: c.start):
-        if clip.start > cursor:
-            gap = clip.start - cursor
+        start_frames = round(clip.start * fps)
+        gap_frames = start_frames - cursor_frames
+        if gap_frames > 0:
             track.append(otio.schema.Gap(
                 source_range=otio.opentime.TimeRange(
                     otio.opentime.RationalTime(0, fps),
-                    otio.opentime.RationalTime(round(gap * fps), fps),
+                    otio.opentime.RationalTime(gap_frames, fps),
                 )
             ))
+        clip_frames = max(1, round(clip.duration * fps))
         track.append(otio.schema.Clip(
             name=clip.name,
             media_reference=otio.schema.ExternalReference(
@@ -88,9 +93,9 @@ def _write_otio(timeline: Timeline, path: Path) -> Path:
             ),
             source_range=otio.opentime.TimeRange(
                 otio.opentime.RationalTime(0, fps),
-                otio.opentime.RationalTime(max(1, round(clip.duration * fps)), fps),
+                otio.opentime.RationalTime(clip_frames, fps),
             ),
         ))
-        cursor = clip.end
+        cursor_frames = start_frames + clip_frames
     otio.adapters.write_to_file(tl, str(path))
     return path

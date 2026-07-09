@@ -65,4 +65,7 @@ def test_edl_structure(simple_timeline):
     assert len(events) == 3
     assert any("00:00:01:00" in ln for ln in events)      # whoosh rec-in
     assert edl.count("* FROM CLIP NAME:") == 3
-    assert "AA" in events[0]
+    # Overlapping whoosh (1.0-1.5) and impact (1.2-1.7) must land on different channels.
+    channels = [ln.split()[2] for ln in events]
+    assert channels[0] == "A"          # first event on audio channel 1
+    assert set(channels) == {"A", "A2"}

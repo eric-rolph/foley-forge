@@ -36,4 +36,6 @@ these): Sonniss GDC bundles, Zapsplat, Mixkit, Pixabay Audio — all forbid redi
 
 **Freesound API:** free for **non-commercial** use only; a commercial product must have each user negotiate
 commercial terms with UPF. foley-forge therefore requires **your own** Freesound API key and never ships one.
-CC-BY files carry attribution obligations that foley-forge auto-writes into `CREDITS.md`.
+`FreesoundClient` is a library-only helper today (no automatic import into the SFX library yet); bring
+downloaded files in with `index-sfx`. `CREDITS.md` is auto-written for any **non-CC0** sound actually placed
+on a timeline, provided its manifest carries the correct per-file license/author metadata.

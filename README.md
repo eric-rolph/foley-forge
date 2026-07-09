@@ -75,7 +75,7 @@ foley-forge analyze myclip.mp4 --backend anthropic --model claude-sonnet-5 -o ou
 | **Caption ("what")** | Per-frame scene description + structured interactions | pluggable VLM backend |
 | **Onsets ("when")** | Precise audio transients so the SFX lands on the *hit* | librosa *(optional)* → numpy flux fallback |
 | **Fuse** | Snap each interaction to the nearest transient; dedup | — |
-| **Match** | Event label → SFX file (tag lexical + optional CLAP semantic) | AudioSet-style taxonomy + CLAP *(optional)* |
+| **Match** | Event label → SFX file (tag lexical; CLAP semantic *planned*) | AudioSet-style taxonomy |
 | **Export** | Place cues on a timeline the NLE imports | hand-rolled FCPXML / FCP7 XML / EDL |
 
 Outputs written to `-o/--out`:
@@ -112,9 +112,11 @@ public-domain and redistributable). To go beyond it:
 
 * **Bring your own packs.** Point `foley-forge index-sfx <dir>` at any folder of `.wav`/`.mp3`. Truly
   bundle-able free sources include **Kenney.nl** (CC0) and CC0-filtered **OpenGameArt**.
-* **Freesound (bring-your-own API key).** `pip install ".[freesound]"`, then expand the library filtered to
-  **CC0 / CC-BY** — attributions are auto-appended to `CREDITS.md`, and CC-BY-NC is excluded from commercial
-  runs by default.
+* **Freesound (bring-your-own API key).** `pip install ".[freesound]"` exposes a Python helper
+  (`foley_forge.sfx.freesound.FreesoundClient`) to search **CC0 / CC-BY** sounds and download previews with
+  your own token — there's no one-command import yet. Bring the files in with `index-sfx` (set correct
+  per-file `license`/`author` in the manifest). `CREDITS.md` is then auto-written for any non-CC0 sound
+  actually placed on a timeline, and CC-BY-NC is excluded from commercial runs by default.
 
 ⚠️ **Do not bundle** Sonniss GDC, Zapsplat, Mixkit, Pixabay, or BBC Sound Effects — all permit use *inside
 your own production* but **forbid redistributing the raw files** as a library (BBC is also non-commercial and

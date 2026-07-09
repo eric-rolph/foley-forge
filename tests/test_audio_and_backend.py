@@ -59,6 +59,11 @@ def test_mock_backend_detects_motion_and_cuts():
     assert labels & {"impact", "movement"}   # from the motion
 
 
+def test_mock_backend_empty_frames_returns_empty():
+    # Guards the max([]) crash on videos where no frame decodes.
+    assert get_backend("mock").caption_frames([]) == []
+
+
 def test_list_backends_reports_mock_available():
     names = {n: avail for n, avail, _ in list_backends()}
     assert names["mock"] is True

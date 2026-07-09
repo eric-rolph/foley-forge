@@ -15,6 +15,13 @@ def test_normalize_label():
     assert normalize_label("complete gibberish here") == (None, 0.0)
 
 
+def test_normalize_label_word_boundaries():
+    # Short keywords must not fire inside unrelated words.
+    assert normalize_label("a scary moment") == (None, 0.0)   # "car" not in "scary"
+    assert normalize_label("pushing a cart") == (None, 0.0)   # "car" not in "cart"
+    assert normalize_label("the boombox") == (None, 0.0)      # "boom" not in "boombox"
+
+
 def test_tags_for_unknown_label_uses_tokens():
     assert set(tags_for("metal clang")) == {"metal", "clang"}
 

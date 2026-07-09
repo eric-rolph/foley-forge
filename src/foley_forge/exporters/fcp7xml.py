@@ -43,6 +43,13 @@ class FCP7XMLExporter(Exporter):
         file_ids: dict[str, str] = {}   # media path -> file id (define once, ref after)
         counter = {"clip": 0, "file": 0}
 
+        # A <file>'s declared duration must cover the longest placed instance of that
+        # media, or a reused clip's <out> would exceed it (some importers then trim it).
+        path_frames: dict[str, int] = {}
+        for c in timeline.clips:
+            df = max(1, seconds_to_frames(c.end, fps) - seconds_to_frames(c.start, fps))
+            path_frames[c.media_path] = max(path_frames.get(c.media_path, 0), df)
+
         def file_id_for(path: str) -> tuple[str, bool]:
             if path in file_ids:
                 return file_ids[path], False
@@ -58,7 +65,7 @@ class FCP7XMLExporter(Exporter):
             vtrack = ET.SubElement(video, "track")
             for clip in vids:
                 self._video_clipitem(
-                    vtrack, clip, fps, timebase, ntsc, counter, file_id_for,
+                    vtrack, clip, fps, timebase, ntsc, counter, file_id_for, path_frames,
                     timeline.width, timeline.height,
                 )
 
@@ -70,15 +77,18 @@ class FCP7XMLExporter(Exporter):
             atrack = ET.SubElement(audio, "track")
             for ln, clip in lanes:
                 if ln == t:
-                    self._audio_clipitem(atrack, clip, fps, timebase, ntsc, counter, file_id_for)
+                    self._audio_clipitem(
+                        atrack, clip, fps, timebase, ntsc, counter, file_id_for, path_frames)
 
         return serialize(root, "<!DOCTYPE xmeml>")
 
-    def _audio_clipitem(self, track, clip, fps, timebase, ntsc, counter, file_id_for):
+    def _audio_clipitem(self, track, clip, fps, timebase, ntsc, counter, file_id_for,
+                        path_frames):
         counter["clip"] += 1
         start_f = seconds_to_frames(clip.start, fps)
         end_f = seconds_to_frames(clip.end, fps)
         dur_f = max(1, end_f - start_f)
+        file_dur = path_frames.get(clip.media_path, dur_f)
 
         item = ET.SubElement(track, "clipitem", id=f"clipitem-{counter['clip']}")
         ET.SubElement(item, "name").text = clip.name
@@ -96,7 +106,7 @@ class FCP7XMLExporter(Exporter):
             ET.SubElement(fel, "name").text = clip.name
             ET.SubElement(fel, "pathurl").text = xmeml_pathurl(clip.media_path)
             _rate(fel, timebase, ntsc, with_ntsc=False)
-            ET.SubElement(fel, "duration").text = str(dur_f)
+            ET.SubElement(fel, "duration").text = str(file_dur)
             fmedia = ET.SubElement(fel, "media")
             fa = ET.SubElement(fmedia, "audio")
             ET.SubElement(fa, "channelcount").text = str(clip.channels)
@@ -108,11 +118,12 @@ class FCP7XMLExporter(Exporter):
         ET.SubElement(st, "trackindex").text = "1"
 
     def _video_clipitem(self, track, clip, fps, timebase, ntsc, counter, file_id_for,
-                        width=1920, height=1080):
+                        path_frames, width=1920, height=1080):
         counter["clip"] += 1
         start_f = seconds_to_frames(clip.start, fps)
         end_f = seconds_to_frames(clip.end, fps)
         dur_f = max(1, end_f - start_f)
+        file_dur = path_frames.get(clip.media_path, dur_f)
 
         item = ET.SubElement(track, "clipitem", id=f"clipitem-{counter['clip']}")
         ET.SubElement(item, "name").text = clip.name
@@ -130,7 +141,7 @@ class FCP7XMLExporter(Exporter):
             ET.SubElement(fel, "name").text = clip.name
             ET.SubElement(fel, "pathurl").text = xmeml_pathurl(clip.media_path)
             _rate(fel, timebase, ntsc, with_ntsc=False)
-            ET.SubElement(fel, "duration").text = str(dur_f)
+            ET.SubElement(fel, "duration").text = str(file_dur)
             fmedia = ET.SubElement(fel, "media")
             fv = ET.SubElement(fmedia, "video")
             sc = ET.SubElement(fv, "samplecharacteristics")

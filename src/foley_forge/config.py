@@ -44,7 +44,7 @@ class Config:
 
         s = data.get("sampling", {})
         cfg.sample_fps = float(s.get("fps", cfg.sample_fps))
-        cfg.max_frames = int(s.get("max_frames", cfg.max_frames))
+        cfg.max_frames = max(1, int(s.get("max_frames", cfg.max_frames)))
         cfg.include_cuts = bool(s.get("include_cuts", cfg.include_cuts))
 
         sc = data.get("scenes", {})

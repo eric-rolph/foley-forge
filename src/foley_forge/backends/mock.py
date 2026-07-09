@@ -43,6 +43,8 @@ class MockBackend(CaptionBackend):
         self.impact_threshold = impact_threshold
 
     def caption_frames(self, frames: list[Frame]) -> list[SceneObservation]:
+        if not frames:
+            return []
         grays = [_gray_small(f.image) for f in frames]
         deltas: list[float] = []
         for i in range(len(frames)):
@@ -51,7 +53,8 @@ class MockBackend(CaptionBackend):
             else:
                 deltas.append(float(np.mean(np.abs(grays[i] - grays[i - 1]))))
 
-        peak = max(deltas) or 1.0
+        peak = max(deltas) if deltas else 1.0
+        peak = peak or 1.0
         observations: list[SceneObservation] = []
         for f, d in zip(frames, deltas, strict=False):
             score = d / peak

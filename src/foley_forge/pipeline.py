@@ -45,16 +45,17 @@ def fuse(
                 description=(inter.raw or obs.description)[:160],
             ))
 
-    raw.sort(key=lambda c: (c.t, -c.confidence))
-    merged: list[Cue] = []
+    # Non-max suppression: accept cues in priority order (specific before generic,
+    # then higher confidence), keeping a cue only if it is >= min_gap from every
+    # already-accepted cue. This preserves the min_gap invariant without the greedy
+    # anchor-chaining that could drop cues separable from all survivors.
+    raw.sort(key=lambda c: (c.event in _GENERIC, -c.confidence, c.t))
+    kept: list[Cue] = []
     for cue in raw:
-        if merged and cue.t - merged[-1].t < config.min_gap:
-            prev = merged[-1]
-            if _prefer(cue, prev):
-                merged[-1] = cue
-            continue
-        merged.append(cue)
-    return merged
+        if all(abs(cue.t - k.t) >= config.min_gap for k in kept):
+            kept.append(cue)
+    kept.sort(key=lambda c: c.t)
+    return kept
 
 
 def _snap(t: float, onsets: list[float], window: float) -> tuple[float, bool]:
@@ -64,14 +65,6 @@ def _snap(t: float, onsets: list[float], window: float) -> tuple[float, bool]:
     if abs(nearest - t) <= window:
         return float(nearest), True
     return t, False
-
-
-def _prefer(a: Cue, b: Cue) -> bool:
-    """Whether cue ``a`` should replace nearby cue ``b``."""
-    a_generic, b_generic = a.event in _GENERIC, b.event in _GENERIC
-    if a_generic != b_generic:
-        return b_generic  # prefer the specific one
-    return a.confidence > b.confidence
 
 
 def build_timeline(info: VideoInfo, cues: list[Cue], config: Config) -> Timeline:
