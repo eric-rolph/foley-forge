@@ -1,0 +1,46 @@
+# foley-forge configuration (copy to foley-forge.toml and edit, or pass flags on the CLI).
+# Every value here has a sensible default; this file just shows what is tunable.
+
+[sampling]
+fps = 1.5              # frames per second to caption (adaptive; cuts always sampled)
+max_frames = 400       # hard cap on frames sent to the caption backend
+include_cuts = true    # always sample one frame at each detected scene cut
+
+[scenes]
+detector = "auto"      # "auto" -> PySceneDetect if installed, else frame-diff fallback
+threshold = 27.0       # PySceneDetect ContentDetector threshold (lower = more cuts)
+
+[backend]
+name = "mock"          # mock | openai | anthropic | opencv5
+# --- openai-compatible local/remote vision server ---
+base_url = "http://localhost:8080/v1"
+model = "qwen2.5-vl-7b-instruct"
+api_key = ""           # or set OPENAI_API_KEY / leave empty for local servers
+# --- anthropic ---
+# model = "claude-sonnet-5"   # set ANTHROPIC_API_KEY in the environment
+# --- opencv5 (experimental) ---
+# vision_onnx  = "models/paligemma2_vision.onnx"
+# embed_onnx   = "models/paligemma2_embed.onnx"
+# decoder_onnx = "models/paligemma2_decoder.onnx"
+# tokenizer    = "models/paligemma2_tokenizer.json"   # OpenCV-format, not HuggingFace
+
+[fusion]
+snap_window = 0.35     # seconds: snap a detected interaction to the nearest audio onset within this window
+min_gap = 0.20         # seconds: merge/deduplicate cues closer than this
+min_confidence = 0.35  # drop interactions below this confidence
+
+[match]
+use_clap = false       # semantic matching (needs the [clap] extra + precomputed embeddings)
+min_score = 0.20       # drop SFX matches weaker than this
+gain_db = -6.0         # default gain applied to placed SFX clips
+commercial = true      # true excludes CC-BY-NC sounds and warns on attribution-required assets
+
+[export]
+formats = ["fcp7xml", "fcpxml", "edl"]   # any of: fcp7xml, fcpxml, edl, otio
+include_source_video = true              # place the source clip on the timeline's primary track
+audio_role = "effects"                   # FCPXML audioRole for placed SFX
+
+[sfx]
+# extra library folders to index alongside the bundled CC0 pack
+libraries = []
+# freesound = { api_key = "", license_filter = "cc0,cc-by" }   # bring your own key; see NOTICE.md

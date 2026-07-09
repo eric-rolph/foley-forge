@@ -1,0 +1,224 @@
+{
+  "version": 1,
+  "generator": "generate_starter_sfx.py",
+  "assets": [
+    {
+      "id": "whoosh_soft",
+      "name": "Whoosh (soft)",
+      "file": "whoosh_soft.wav",
+      "tags": [
+        "whoosh",
+        "swipe",
+        "transition",
+        "movement",
+        "swish"
+      ],
+      "license": "CC0-1.0",
+      "author": "foley-forge",
+      "source": "synthesized (scripts/generate_starter_sfx.py)",
+      "url": "",
+      "category": "transition",
+      "duration": 0.55
+    },
+    {
+      "id": "whoosh_hard",
+      "name": "Whoosh (hard)",
+      "file": "whoosh_hard.wav",
+      "tags": [
+        "whoosh",
+        "swipe",
+        "swing",
+        "transition",
+        "fast"
+      ],
+      "license": "CC0-1.0",
+      "author": "foley-forge",
+      "source": "synthesized (scripts/generate_starter_sfx.py)",
+      "url": "",
+      "category": "transition",
+      "duration": 0.35
+    },
+    {
+      "id": "impact_thud",
+      "name": "Impact thud",
+      "file": "impact_thud.wav",
+      "tags": [
+        "impact",
+        "thud",
+        "drop",
+        "object",
+        "fall",
+        "bang",
+        "door",
+        "slam"
+      ],
+      "license": "CC0-1.0",
+      "author": "foley-forge",
+      "source": "synthesized (scripts/generate_starter_sfx.py)",
+      "url": "",
+      "category": "impact",
+      "duration": 0.32
+    },
+    {
+      "id": "impact_hit",
+      "name": "Impact hit",
+      "file": "impact_hit.wav",
+      "tags": [
+        "impact",
+        "hit",
+        "punch",
+        "fist",
+        "bang",
+        "smack"
+      ],
+      "license": "CC0-1.0",
+      "author": "foley-forge",
+      "source": "synthesized (scripts/generate_starter_sfx.py)",
+      "url": "",
+      "category": "impact",
+      "duration": 0.25
+    },
+    {
+      "id": "boom_low",
+      "name": "Boom (low)",
+      "file": "boom_low.wav",
+      "tags": [
+        "boom",
+        "explosion",
+        "blast",
+        "gun",
+        "gunshot",
+        "shot",
+        "impact"
+      ],
+      "license": "CC0-1.0",
+      "author": "foley-forge",
+      "source": "synthesized (scripts/generate_starter_sfx.py)",
+      "url": "",
+      "category": "impact",
+      "duration": 0.85
+    },
+    {
+      "id": "click_soft",
+      "name": "Click",
+      "file": "click_soft.wav",
+      "tags": [
+        "click",
+        "button",
+        "switch",
+        "keyboard",
+        "typing",
+        "keys",
+        "snap"
+      ],
+      "license": "CC0-1.0",
+      "author": "foley-forge",
+      "source": "synthesized (scripts/generate_starter_sfx.py)",
+      "url": "",
+      "category": "ui",
+      "duration": 0.05
+    },
+    {
+      "id": "bell_ding",
+      "name": "Bell ding",
+      "file": "bell_ding.wav",
+      "tags": [
+        "bell",
+        "ring",
+        "ding",
+        "chime",
+        "phone",
+        "notification"
+      ],
+      "license": "CC0-1.0",
+      "author": "foley-forge",
+      "source": "synthesized (scripts/generate_starter_sfx.py)",
+      "url": "",
+      "category": "ui",
+      "duration": 0.6
+    },
+    {
+      "id": "footstep",
+      "name": "Footstep",
+      "file": "footstep.wav",
+      "tags": [
+        "footstep",
+        "footsteps",
+        "walk",
+        "step"
+      ],
+      "license": "CC0-1.0",
+      "author": "foley-forge",
+      "source": "synthesized (scripts/generate_starter_sfx.py)",
+      "url": "",
+      "category": "foley",
+      "duration": 0.18
+    },
+    {
+      "id": "glass_break",
+      "name": "Glass break",
+      "file": "glass_break.wav",
+      "tags": [
+        "glass",
+        "break",
+        "shatter",
+        "smash"
+      ],
+      "license": "CC0-1.0",
+      "author": "foley-forge",
+      "source": "synthesized (scripts/generate_starter_sfx.py)",
+      "url": "",
+      "category": "foley",
+      "duration": 0.5
+    },
+    {
+      "id": "splash",
+      "name": "Splash",
+      "file": "splash.wav",
+      "tags": [
+        "water",
+        "splash"
+      ],
+      "license": "CC0-1.0",
+      "author": "foley-forge",
+      "source": "synthesized (scripts/generate_starter_sfx.py)",
+      "url": "",
+      "category": "foley",
+      "duration": 0.5
+    },
+    {
+      "id": "clap",
+      "name": "Clap",
+      "file": "clap.wav",
+      "tags": [
+        "clap",
+        "applause",
+        "hands",
+        "cheer",
+        "crowd"
+      ],
+      "license": "CC0-1.0",
+      "author": "foley-forge",
+      "source": "synthesized (scripts/generate_starter_sfx.py)",
+      "url": "",
+      "category": "foley",
+      "duration": 0.12
+    },
+    {
+      "id": "knock",
+      "name": "Knock",
+      "file": "knock.wav",
+      "tags": [
+        "door",
+        "knock",
+        "rap"
+      ],
+      "license": "CC0-1.0",
+      "author": "foley-forge",
+      "source": "synthesized (scripts/generate_starter_sfx.py)",
+      "url": "",
+      "category": "foley",
+      "duration": 0.28
+    }
+  ]
+}

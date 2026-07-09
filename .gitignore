@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Tooling
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# foley-forge working output
+out/
+*.wav.tmp
+scene_narrative.json
+scene_narrative.md
+drop.xml
+drop.fcpxml
+drop.edl
+CREDITS.md
+
+# Local model / cache dirs
+models/
+.cache/
+
+# Local secrets (never commit API keys)
+.env
+freesound_token.json
+*.secret

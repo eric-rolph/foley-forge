@@ -1,0 +1,85 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "foley-forge"
+version = "0.1.0"
+description = "Auto-foley for video editors: on-device VLM scene narration that detects on-screen physical interactions and drops matched sound effects onto an editor timeline (FCPXML / FCP7 XML / EDL)."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Eric Rolph" }]
+keywords = [
+    "video-editing",
+    "sound-effects",
+    "foley",
+    "vlm",
+    "opencv",
+    "fcpxml",
+    "edl",
+    "davinci-resolve",
+    "youtube",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Multimedia :: Video",
+]
+dependencies = [
+    "opencv-python>=4.9",
+    "numpy>=1.24",
+    "typer>=0.12",
+    "rich>=13",
+]
+
+[project.optional-dependencies]
+audio = ["librosa>=0.10"]          # better onset detection + beat tracking
+scenes = ["scenedetect>=0.6"]      # content-aware shot/scene detection
+cloud = ["anthropic>=0.40"]        # Claude vision caption backend
+otio = ["opentimelineio>=0.17"]    # OpenTimelineIO export (EDL/AAF/OTIO)
+freesound = ["requests>=2.31"]     # bring-your-own-key Freesound expansion
+clap = ["torch>=2.2", "transformers>=4.44", "soundfile>=0.12"]  # semantic SFX matching
+captions = ["faster-whisper>=1.0"] # roadmap: STT captions
+dev = ["pytest>=8", "ruff>=0.6"]
+all = [
+    "librosa>=0.10",
+    "scenedetect>=0.6",
+    "anthropic>=0.40",
+    "opentimelineio>=0.17",
+    "requests>=2.31",
+]
+
+[project.scripts]
+foley-forge = "foley_forge.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/eric-rolph/foley-forge"
+Issues = "https://github.com/eric-rolph/foley-forge/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/foley_forge"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/foley_forge/assets" = "foley_forge/assets"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# E501: long lines OK (line-length is a soft target). B008: Typer uses function
+# calls (typer.Argument/Option) in parameter defaults by design.
+ignore = ["E501", "B008"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+pythonpath = ["src"]
