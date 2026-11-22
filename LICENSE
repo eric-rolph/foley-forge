@@ -19,9 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
---------------------------------------------------------------------------------
-Bundled sound effects (src/foley_forge/assets/sfx/) are original works
-synthesized for this project and released under the Creative Commons CC0 1.0
-Universal public-domain dedication. See src/foley_forge/assets/sfx/manifest.json
-for per-file provenance and NOTICE.md for third-party dependency licenses.
