@@ -1,5 +1,8 @@
 # 🎬 foley-forge
 
+[![CI](https://github.com/eric-rolph/foley-forge/actions/workflows/ci.yml/badge.svg)](https://github.com/eric-rolph/foley-forge/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-34d399)](LICENSE)
+
 **Auto-foley for video editors.** Point it at a video, and foley-forge watches the footage, writes a
 timestamped *scene narrative*, detects on-screen **physical interactions** (a door slam, a punch, footsteps,
 a glass breaking, a keyboard clack), matches each one to a **sound effect**, and drops the SFX onto a
@@ -8,8 +11,11 @@ a glass breaking, a keyboard clack), matches each one to a **sound effect**, and
 No manual scrubbing for "where does the *whoosh* go." foley-forge finds the moment, snaps it to the exact
 audio transient, picks a sound, and hands you an editable timeline — you keep final say on every cue.
 
-```
-video (any container) ──► scene narrative + detected interactions ──► matched SFX ──► drop.xml / drop.fcpxml / drop.edl
+```mermaid
+flowchart LR
+    V["Input Video<br/>(MP4 / MOV / MKV)"] --> A["Scene Narrative &<br/>Interaction Detection"]
+    A --> B["Transient Alignment &<br/>SFX Matching / AudioGen"]
+    B --> C["Editable NLE Timeline<br/>FCPXML · Resolve XML · EDL"]
 ```
 
 ---
